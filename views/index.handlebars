@@ -6,19 +6,17 @@
   <form id="login" novalidate>
     <div class="form-group">
       <label for="login-name">Email or username</label>
-      <input id="login-name" type="text" required>
-      <p class="invalid-feedback">Please enter an email or username.</p>
+      <input id="login-name" class="form-control" type="text" aria-describedby="login-name-error" data-invalid-feedback="login-name-error" required>
+      <p id="login-name-error" class="invalid-feedback">Please enter an email or username.</p>
     </div>
 
     <div class="form-group">
       <label for="password">Password</label>
-      <input id="password" type="password" minlength="3" maxlength="128" required>
-      <p class="invalid-feedback">Please enter a password between 3 and 128 characters long.</p>
+      <input id="password" class="form-control" type="password" minlength="3" maxlength="128" aria-describedby="password-error" data-invalid-feedback="password-error" required>
+      <p id="password-error" class="invalid-feedback">Please enter a password between 3 and 128 characters long.</p>
     </div>
 
-    <p id="login-feedback" class="invalid-feedback">
-      Invalid username, email, or password.
-    </p>
+    <p id="login-feedback" class="invalid-feedback" role="alert">The username, email, or password did not match our records. Please try again.</p>
 
     <button type="submit">Log in</button>
   </form>

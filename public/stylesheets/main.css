@@ -1,3 +1,49 @@
+button {
+  background-color: #00bba2;
+  border: none;
+  border-radius: .3em;
+  color: #ffffff;
+  font-size: 1em;
+  padding: .375em .75em;
+}
+
+input {
+  border: .1em solid #afafaf;
+  box-sizing: border-box;
+  font-size: 1em;
+  padding: .375em .75em;
+  width: 100%;
+}
+
+label {
+  display: inline-block;
+  margin-bottom: .5em;
+}
+
+main {
+  padding: 1em;
+}
+
+
+.form-group {
+  margin-bottom: 1em;
+}
+
 .invalid-feedback {
+  color: #be0000;
   display: none;
+  margin-top: .5em;
+}
+
+.was-validated input:invalid {
+  border-color: #be0000;
+}
+
+.was-validated .show-feedback {
+  display: block;
+}
+
+
+#login-feedback {
+  margin-bottom: 1em;
 }
