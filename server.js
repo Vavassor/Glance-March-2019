@@ -29,7 +29,7 @@ app.engine(
 );
 app.set("view engine", "handlebars");
 
-require("./routes/apiRoutes")(app);
+require("./routes/apiRoutes")(app, db);
 require("./routes/htmlRoutes")(app);
 
 db.sequelize

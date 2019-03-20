@@ -1,0 +1,28 @@
+{
+  "name": "glance",
+  "version": "1.0.0",
+  "description": "Tumblr clone",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Vavassor/Glance.git"
+  },
+  "author": "Andrew Dawson <dawso.andrew@gmail.com>",
+  "license": "CC0-1.0",
+  "bugs": {
+    "url": "https://github.com/Vavassor/Glance/issues"
+  },
+  "homepage": "https://github.com/Vavassor/Glance#readme",
+  "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "express": "^4.16.4",
+    "express-handlebars": "^3.0.2",
+    "oauth2orize": "^1.11.0",
+    "passport": "^0.4.0",
+    "sequelize": "^5.1.0"
+  }
+}
