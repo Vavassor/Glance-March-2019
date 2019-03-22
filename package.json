@@ -21,8 +21,12 @@
     "bcrypt-nodejs": "0.0.3",
     "express": "^4.16.4",
     "express-handlebars": "^3.0.2",
+    "express-session": "^1.15.6",
+    "nanoid": "^2.0.1",
     "oauth2orize": "^1.11.0",
     "passport": "^0.4.0",
-    "sequelize": "^5.1.0"
+    "passport-local": "^1.0.0",
+    "sequelize": "^5.1.0",
+    "uuid": "^3.3.2"
   }
 }

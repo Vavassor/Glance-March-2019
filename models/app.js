@@ -3,12 +3,13 @@
 const bcrypt = require("bcrypt-nodejs");
 
 module.exports = (sequelize, DataTypes) => {
-  const Client = sequelize.define(
-    "Client",
+  const App = sequelize.define(
+    "App",
     {
       clientId: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: true,
       },
       clientSecret: {
         type: DataTypes.STRING,
@@ -27,19 +28,24 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      website: {
+        type: DataTypes.STRING,
+        validate: {
+          isUrl: true,
+        },
+      },
     },
     {
-      tableName: "clients",
       underscored: true,
       hooks: {
-        beforeValidate: (client) => {
-          client.clientSecret = bcrypt.hashSync(
-            client.clientSecret,
+        beforeValidate: (app) => {
+          app.clientSecret = bcrypt.hashSync(
+            app.clientSecret,
             bcrypt.genSaltSync(10),
             null);
         },
       },
     });
 
-  return Client;
+  return App;
 };

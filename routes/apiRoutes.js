@@ -1,23 +1,56 @@
 "use strict";
 
+const uuidv5 = require("uuid/v5");
+const nanoid = require("nanoid");
 const models = require("../models");
 
 module.exports = (app) => {
-  app.post("/api/client", (request, response) => {
-    models.Client
+  app.post("/api/app", (request, response) => {
+    const name = request.body.name;
+    let website = request.body.website;
+    const redirectUri = request.body["redirect_uri"];
+
+    if (!redirectUri || redirectUri.length === 0 || !name || name.length === 0) {
+      response
+        .status(400)
+        .json({
+          reason: "Missing parameter. Please give a `name` and `redirect_uri`.",
+        });
+    }
+
+    if (!website || website.length === 0) {
+      website = null;
+    }
+
+    const clientId = uuidv5(name, uuidv5.URL);
+    const clientSecret = nanoid();
+
+    models.App
       .findOrCreate({
-        clientId: request.body["client_id"],
-        clientSecret: request.body["client_secret"],
-        name: request.body["name"],
-        redirectUri: request.body["redirect_uri"],
+        defaults: {
+          clientId: clientId,
+          clientSecret: clientSecret,
+          name: name,
+          redirectUri: redirectUri,
+          website: website,
+        },
+        where: {
+          clientId: clientId,
+        },
       })
-      .then((client) => {
+      .then(([app, created]) => {
+        let statusCode = 200;
+        if (created) {
+          statusCode = 201;
+        }
         response
-          .status(201)
+          .status(statusCode)
           .json({
-            "client_id": client.clientId,
-            "name": client.name,
-            "redirect_uri": client.redirectUri,
+            "client_id": app.clientId,
+            "client_secret": clientSecret,
+            "name": app.name,
+            "redirect_uri": app.redirectUri,
+            "website": app.website,
           });
       });
   });

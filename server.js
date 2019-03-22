@@ -2,6 +2,8 @@
 
 const express = require("express");
 const exphbs = require("express-handlebars");
+const passport = require("passport");
+const session = require("express-session");
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -29,7 +31,17 @@ app.engine(
 );
 app.set("view engine", "handlebars");
 
-require("./routes/apiRoutes")(app, db);
+app.use(session({
+  secret: "Super Secret Session Key",
+  saveUninitialized: true,
+  resave: true,
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+require("./routes/apiRoutes")(app);
+require("./routes/oauth2Routes")(app);
 require("./routes/htmlRoutes")(app);
 
 db.sequelize

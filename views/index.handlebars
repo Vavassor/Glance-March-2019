@@ -1,23 +1,3 @@
-{{#section "head"}}
-  <script src="javascript/index.js" defer></script>
-{{/section}}
-
 <main>
-  <form id="login" novalidate>
-    <div class="form-group">
-      <label for="login-name">Email or username</label>
-      <input id="login-name" class="form-control" type="text" aria-describedby="login-name-error" data-invalid-feedback="login-name-error" required>
-      <p id="login-name-error" class="invalid-feedback">Please enter an email or username.</p>
-    </div>
-
-    <div class="form-group">
-      <label for="password">Password</label>
-      <input id="password" class="form-control" type="password" minlength="3" maxlength="128" aria-describedby="password-error" data-invalid-feedback="password-error" required>
-      <p id="password-error" class="invalid-feedback">Please enter a password between 3 and 128 characters long.</p>
-    </div>
-
-    <p id="login-feedback" class="invalid-feedback" role="alert">The username, email, or password did not match our records. Please try again.</p>
-
-    <button type="submit">Log in</button>
-  </form>
+  <a href="/oauth2/authorize?response_type=code&client_id=c7d9e3d7-53fc-5daf-acdf-5bc8334378a7&redirect_uri=%2F">Connect</a>
 </main>
