@@ -60,8 +60,19 @@ module.exports = (app) => {
     "/api/account",
     passport.authenticate("bearer", {session: false}),
     (request, response) => {
-      response.json({
-        email: "me@example.com",
-      });
+      models.Account
+        .findOne({
+          where: {
+            id: request.user.id,
+          },
+        })
+        .then((account) => {
+          response.json({
+            "email": account.email,
+          });
+        })
+        .catch((error) => {
+          response.json({error: error});
+        });
     });
 };
