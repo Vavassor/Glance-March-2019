@@ -7,6 +7,9 @@ module.exports = {
     database: process.env.DB_NAME,
     host: process.env.DB_HOSTNAME,
     dialect: "mysql",
+    session: {
+      secret: process.env.SESSION_SECRET,
+    },
   },
   test: {
     username: "root",
@@ -21,5 +24,8 @@ module.exports = {
     database: process.env.DB_NAME,
     host: process.env.DB_HOSTNAME,
     dialect: "mysql",
+    session: {
+      secret: process.env.SESSION_SECRET,
+    },
   },
 };

@@ -8,6 +8,9 @@ const session = require("express-session");
 const app = express();
 const PORT = process.env.PORT || 8080;
 
+const env = process.env.NODE_ENV || "development";
+const config = require(__dirname + "/config/config.js")[env];
+
 const db = require("./models");
 
 app.use(express.urlencoded({extended: true}));
@@ -32,7 +35,7 @@ app.engine(
 app.set("view engine", "handlebars");
 
 app.use(session({
-  secret: "Super Secret Session Key",
+  secret: config.session.secret,
   saveUninitialized: true,
   resave: true,
 }));
