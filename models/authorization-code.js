@@ -13,6 +13,17 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      scope: {
+        type: DataTypes.STRING,
+      },
+      clientId: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      userId: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
     },
     {
       underscored: true,

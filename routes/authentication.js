@@ -1,9 +1,30 @@
 "use strict";
 
+const AppStrategy = require("./app-strategy.js");
 const bcrypt = require("bcrypt-nodejs");
 const models = require("../models");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
+
+passport.use("app", new AppStrategy(
+  (clientId, clientSecret, done) => {
+    models.App
+      .findOne({
+        where: {
+          clientId: clientId,
+        },
+      })
+      .then((app) => {
+        if (!app || (clientSecret && clientSecret !== app.clientSecret)) {
+          return done(null, false);
+        }
+        done(null, app);
+      })
+      .catch((error) => {
+        done(error);
+      });
+  }
+));
 
 passport.use(new LocalStrategy(
   (username, password, done) => {

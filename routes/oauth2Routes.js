@@ -17,7 +17,7 @@ module.exports = (app) => {
     models.App
       .findOne({
         where: {
-          clientId: id,
+          id: id,
         },
       })
       .then((app) => {
@@ -37,6 +37,9 @@ module.exports = (app) => {
         .create({
           value: nanoid(),
           redirectUri: redirectUri,
+          scope: ares.scope,
+          clientId: client.clientId,
+          userId: user.id,
         })
         .then((code) => {
           done(null, code.value);
@@ -49,7 +52,7 @@ module.exports = (app) => {
 
   server.exchange(oauth2orize.exchange.code(
     (client, code, redirectUri, done) => {
-      AuthorizationCode
+      models.AuthorizationCode
         .findOne({
           where: {
             value: code,
@@ -57,7 +60,8 @@ module.exports = (app) => {
         })
         .then((authorizationCode) => {
           if (!authorizationCode
-              || authorizationCode.redirectUri !== redirectUri) {
+              || authorizationCode.redirectUri !== redirectUri
+              || authorizationCode.clientId !== client.clientId) {
             return done(null, false);
           }
           
@@ -89,10 +93,10 @@ module.exports = (app) => {
           },
         })
         .then((app) => {
-          if (redirectUri !== app.redirectUri) {
+          if (!app || redirectUri !== app.redirectUri) {
             return done(null, false);
           }
-          done(null, app, redirectUri);
+          done(null, app, app.redirectUri);
         })
         .catch((error) => {
           done(error);
@@ -102,7 +106,8 @@ module.exports = (app) => {
       response.render("authorize",
         {
           title: "Authorize",
-          clientName: request.oauth2.client.name,
+          client: request.oauth2.client,
+          user: request.user,
           transactionId: request.oauth2.transactionID,
         }
       );
@@ -117,6 +122,7 @@ module.exports = (app) => {
 
   app.post(
     "/oauth2/token",
+    passport.authenticate("app", {session: false}),
     server.token(),
     server.errorHandler()
   );
