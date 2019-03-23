@@ -68,6 +68,7 @@ module.exports = (app) => {
           models.AccessToken
             .create({
               value: nanoid(),
+              userId: authorizationCode.userId,
             })
             .then((token) => {
               done(null, token.value, null, null);

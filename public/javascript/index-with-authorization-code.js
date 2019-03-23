@@ -102,8 +102,21 @@ function loadSomething() {
   })
   .then((responseJson) => {
     const response = JSON.parse(responseJson);
-    const accessToken = document.getElementById("token");
-    accessToken.innerText = "Access Token " + response["access_token"];
+    ajaxCall({
+      method: "GET",
+      url: "/api/account",
+      headers: {
+        "Authorization": "Bearer " + response["access_token"],
+      },
+    })
+    .then((responseJson) => {
+      const response = JSON.parse(responseJson);
+      const accessToken = document.getElementById("email");
+      accessToken.innerText = response["email"];
+    })
+    .catch((error) => {
+      console.error(error);
+    });
   })
   .catch((error) => {
     console.log(error);

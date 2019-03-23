@@ -1,6 +1,7 @@
 "use strict";
 
 const AppStrategy = require("./app-strategy.js");
+const BearerStrategy = require('passport-http-bearer').Strategy;
 const bcrypt = require("bcrypt-nodejs");
 const models = require("../models");
 const passport = require("passport");
@@ -19,6 +20,43 @@ passport.use("app", new AppStrategy(
           return done(null, false);
         }
         done(null, app);
+      })
+      .catch((error) => {
+        done(error);
+      });
+  }
+));
+
+passport.use(new BearerStrategy(
+  (token, done) => {
+    models.AccessToken
+      .findOne({
+        where: {
+          value: token,
+        },
+      })
+      .then((accessToken) => {
+        if (!accessToken) {
+          done(null, false);
+        }
+
+        console.log(accessToken);
+        
+        models.Account
+          .findOne({
+            where: {
+              id: accessToken.userId,
+            },
+          })
+          .then((account) => {
+            if (!account) {
+              done(null, false);
+            }
+            done(null, account);
+          })
+          .catch((error) => {
+            done(error);
+          });
       })
       .catch((error) => {
         done(error);

@@ -1,8 +1,9 @@
 "use strict";
 
-const uuidv5 = require("uuid/v5");
-const nanoid = require("nanoid");
 const models = require("../models");
+const nanoid = require("nanoid");
+const passport = require("passport");
+const uuidv5 = require("uuid/v5");
 
 module.exports = (app) => {
   app.post("/api/app", (request, response) => {
@@ -54,4 +55,13 @@ module.exports = (app) => {
           });
       });
   });
+
+  app.get(
+    "/api/account",
+    passport.authenticate("bearer", {session: false}),
+    (request, response) => {
+      response.json({
+        email: "me@example.com",
+      });
+    });
 };
