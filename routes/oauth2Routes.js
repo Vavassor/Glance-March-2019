@@ -2,9 +2,12 @@
 
 const authentication = require("./authentication.js");
 const models = require("../models");
+const moment = require("moment");
 const nanoid = require("nanoid");
 const oauth2orize = require("oauth2orize");
 const passport = require("passport");
+
+const authorizationCodeExpirationSeconds = 60 * 10;
 
 module.exports = (app) => {
   const server = oauth2orize.createServer();
@@ -40,6 +43,9 @@ module.exports = (app) => {
           scope: ares.scope,
           clientId: client.clientId,
           accountId: user.id,
+          expiration: moment()
+            .add(authorizationCodeExpirationSeconds, "s")
+            .toDate(),
         })
         .then((code) => {
           done(null, code.value);
@@ -61,18 +67,23 @@ module.exports = (app) => {
         .then((authorizationCode) => {
           if (!authorizationCode
               || authorizationCode.redirectUri !== redirectUri
-              || authorizationCode.clientId !== client.clientId) {
+              || authorizationCode.clientId !== client.clientId
+              || moment().isAfter(authorizationCode.expiration)) {
             return done(null, false);
           }
+
+          const originalValue = nanoid();
           
-          return models.AccessToken
-            .create({
-              value: nanoid(),
-              accountId: authorizationCode.accountId,
-            });
-        })
-        .then((token) => {
-          done(null, token.value, null, null);
+          models.AccessToken.create({
+            value: originalValue,
+            accountId: authorizationCode.accountId,
+          })
+          .then((token) => {
+            done(null, originalValue, null, null);
+          })
+          .catch((error) => {
+            done(error);
+          });;
         })
         .catch((error) => {
           done(error);

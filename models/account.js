@@ -14,11 +14,6 @@ module.exports = (sequelize, DataTypes) => {
       password: {
         type: DataTypes.STRING,
         allowNull: false,
-        validate: {
-          hashesMatch: function(password) {
-            return bcrypt.compareSync(password, this.password);
-          },
-        },
       },
       email: {
         type: DataTypes.STRING,
@@ -32,18 +27,25 @@ module.exports = (sequelize, DataTypes) => {
     {
       underscored: true,
       hooks: {
-        beforeCreate: (account) => {
-          account.password = bcrypt.hashSync(
-            account.password,
-            bcrypt.genSaltSync(10),
-            null);
+        beforeCreate: (account, options) => {
+          account.password = bcrypt.hashSync(account.password, bcrypt.genSaltSync(10));
         },
       },
     });
 
   Account.associate = (models) => {
-    models.Account.hasMany(models.AccessToken);
-    models.Account.hasMany(models.AuthorizationCode);
+    models.Account.hasMany(
+      models.AccessToken,
+      {
+        foreignKey: "accountId",
+      }
+    );
+    models.Account.hasMany(
+      models.AuthorizationCode,
+      {
+        foreignKey: "accountId",
+      }
+    );
   };
   
   return Account;

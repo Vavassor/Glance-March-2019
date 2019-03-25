@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
       scope: {
         type: DataTypes.STRING,
       },
-      expires: {
+      expiration: {
         type: DataTypes.DATE,
         allowNull: false,
       },
@@ -32,6 +32,12 @@ module.exports = (sequelize, DataTypes) => {
       {
         foreignKey: "clientId",
         targetKey: "clientId",
+      }
+    );
+    models.AuthorizationCode.belongsTo(
+      models.Account,
+      {
+        foreignKey: "accountId",
       }
     );
   };
