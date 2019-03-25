@@ -33,6 +33,20 @@ module.exports = (sequelize, DataTypes) => {
       },
     });
 
+  Account.prototype.passwordMatches = function(password) {
+    return new Promise(
+      (resolve, reject) => {
+        bcrypt.compare(password, this.password, (error, result) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(result);
+          }
+        });
+      }
+    );
+  };
+
   Account.associate = (models) => {
     models.Account.hasMany(
       models.AccessToken,

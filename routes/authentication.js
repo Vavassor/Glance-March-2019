@@ -2,7 +2,6 @@
 
 const AppStrategy = require("./app-strategy.js");
 const BearerStrategy = require("passport-http-bearer").Strategy;
-const bcrypt = require("bcrypt-nodejs");
 const models = require("../models");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
@@ -16,10 +15,23 @@ passport.use("app", new AppStrategy(
         },
       })
       .then((app) => {
-        if (!app || (clientSecret && clientSecret !== app.clientSecret)) {
+        if (!app) {
           return done(null, false);
         }
-        done(null, app);
+        if (clientSecret) {
+          // The secret isn't required. But, if one is provided and it's wrong:
+          // it's suspicious.
+          app.secretMatches(clientSecret)
+            .then((same) => {
+              if (!same) {
+                return done(null, false);
+              }
+              done(null, app);
+            })
+            .catch(error => done(error));
+        } else {
+          done(null, app);
+        }
       })
       .catch((error) => {
         done(error);
@@ -71,16 +83,14 @@ passport.use(new LocalStrategy(
         if (!account) {
           return done(null, false);
         }
-        
-        bcrypt.compare(password, account.password, (error, same) => {
-          if (error) {
-            return done(error);
-          }
-          if (!same) {
-            return done(null, false);
-          }
-          done(null, account);
-        });
+        account.passwordMatches(password)
+          .then((same) => {
+            if (!same) {
+              return done(null, false);
+            }
+            done(null, account);
+          })
+          .catch(error => done(error));
       })
       .catch((error) => {
         done(error);

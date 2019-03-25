@@ -14,11 +14,6 @@ module.exports = (sequelize, DataTypes) => {
       clientSecret: {
         type: DataTypes.STRING,
         allowNull: false,
-        validate: {
-          hashesMatch: function(clientSecret) {
-            return bcrypt.compareSync(clientSecret, this.clientSecret);
-          },
-        },
       },
       name: {
         type: DataTypes.STRING,
@@ -38,14 +33,28 @@ module.exports = (sequelize, DataTypes) => {
     {
       underscored: true,
       hooks: {
-        beforeValidate: (app) => {
+        beforeCreate: (app) => {
           app.clientSecret = bcrypt.hashSync(
             app.clientSecret,
-            bcrypt.genSaltSync(10),
-            null);
+            bcrypt.genSaltSync(10)
+          );
         },
       },
     });
+
+  App.prototype.secretMatches = function(secret) {
+    return new Promise(
+      (resolve, reject) => {
+        bcrypt.compare(secret, this.secret, (error, result) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(result);
+          }
+        });
+      }
+    );
+  };
 
   App.associate = (models) => {
     models.App.hasMany(

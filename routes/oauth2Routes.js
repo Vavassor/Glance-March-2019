@@ -78,12 +78,11 @@ module.exports = (app) => {
             value: originalValue,
             accountId: authorizationCode.accountId,
           })
-          .then((token) => {
-            done(null, originalValue, null, null);
-          })
+          .then(token => authorizationCode.destroy())
+          .then(affectedRows => done(null, originalValue, null, null))
           .catch((error) => {
             done(error);
-          });;
+          });
         })
         .catch((error) => {
           done(error);
