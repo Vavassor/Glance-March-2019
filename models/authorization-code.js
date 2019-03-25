@@ -16,18 +16,25 @@ module.exports = (sequelize, DataTypes) => {
       scope: {
         type: DataTypes.STRING,
       },
-      clientId: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      userId: {
-        type: DataTypes.STRING,
+      expires: {
+        type: DataTypes.DATE,
         allowNull: false,
       },
     },
     {
+      timestamps: false,
       underscored: true,
     });
+
+  AuthorizationCode.associate = (models) => {
+    models.AuthorizationCode.belongsTo(
+      models.App,
+      {
+        foreignKey: "clientId",
+        targetKey: "clientId",
+      }
+    );
+  };
 
   return AuthorizationCode;
 };

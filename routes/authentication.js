@@ -39,24 +39,18 @@ passport.use(new BearerStrategy(
         if (!accessToken) {
           done(null, false);
         }
-
-        console.log(accessToken);
         
-        models.Account
-          .findOne({
+        return models.Account.findOne({
             where: {
-              id: accessToken.userId,
+              id: accessToken.accountId,
             },
-          })
-          .then((account) => {
-            if (!account) {
-              done(null, false);
-            }
-            done(null, account);
-          })
-          .catch((error) => {
-            done(error);
           });
+      })
+      .then((account) => {
+        if (!account) {
+          done(null, false);
+        }
+        done(null, account);
       })
       .catch((error) => {
         done(error);

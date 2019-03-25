@@ -39,7 +39,7 @@ module.exports = (app) => {
           redirectUri: redirectUri,
           scope: ares.scope,
           clientId: client.clientId,
-          userId: user.id,
+          accountId: user.id,
         })
         .then((code) => {
           done(null, code.value);
@@ -65,17 +65,14 @@ module.exports = (app) => {
             return done(null, false);
           }
           
-          models.AccessToken
+          return models.AccessToken
             .create({
               value: nanoid(),
-              userId: authorizationCode.userId,
-            })
-            .then((token) => {
-              done(null, token.value, null, null);
-            })
-            .catch((error) => {
-              done(error);
+              accountId: authorizationCode.accountId,
             });
+        })
+        .then((token) => {
+          done(null, token.value, null, null);
         })
         .catch((error) => {
           done(error);

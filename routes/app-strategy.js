@@ -29,7 +29,7 @@ AppStrategy.prototype.authenticate = function(request) {
 
   const self = this;
 
-  function verified(error, client, info) {
+  const verified = (error, client, info) => {
     if (error) {
       return self.error(error);
     }

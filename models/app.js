@@ -47,5 +47,15 @@ module.exports = (sequelize, DataTypes) => {
       },
     });
 
+  App.associate = (models) => {
+    models.App.hasMany(
+      models.AuthorizationCode,
+      {
+        foreignKey: "clientId",
+        sourceKey: "clientId",
+      }
+    );
+  };
+
   return App;
 };

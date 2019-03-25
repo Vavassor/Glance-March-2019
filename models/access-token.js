@@ -16,10 +16,6 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
-      userId: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
     },
     {
       underscored: true,
@@ -32,6 +28,10 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
     });
+
+  AccessToken.associate = (models) => {
+    models.AccessToken.belongsTo(models.Account);
+  };
 
   return AccessToken;
 };

@@ -40,6 +40,11 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
     });
+
+  Account.associate = (models) => {
+    models.Account.hasMany(models.AccessToken);
+    models.Account.hasMany(models.AuthorizationCode);
+  };
   
   return Account;
 };
