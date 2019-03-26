@@ -20,13 +20,14 @@ function AppStrategy(options, verify) {
 util.inherits(AppStrategy, passport.Strategy);
 
 AppStrategy.prototype.authenticate = function(request) {
-  if (!request.body || !request.body["client_id"]) {
+  const clientId = request.body["client_id"];
+  const clientSecret = request.body["client_secret"];
+  const codeVerifier = request.body["code_verifier"];
+
+  if (!request.body || !clientId || (!clientSecret && !codeVerifier)) {
     return this.fail();
   }
   
-  const clientId = request.body["client_id"];
-  const clientSecret = request.body["client_secret"];
-
   const self = this;
 
   const verified = (error, client, info) => {
@@ -39,7 +40,7 @@ AppStrategy.prototype.authenticate = function(request) {
     self.success(client, info);
   }
 
-  this._verify(clientId, clientSecret, verified);
+  this._verify(clientId, clientSecret, codeVerifier, verified);
 };
 
 module.exports = AppStrategy;

@@ -1,14 +1,15 @@
 "use strict";
 
 const AppStrategy = require("./controllers/app-strategy.js");
-const oauth2orize = require("oauth2orize");
-const oauth2Controller = require("./controllers/oauth2.js");
 const authentication = require("./controllers/authentication.js");
 const BearerStrategy = require("passport-http-bearer").Strategy;
 const express = require("express");
 const exphbs = require("express-handlebars");
 const LocalStrategy = require("passport-local").Strategy;
+const oauth2orize = require("oauth2orize");
+const oauth2Controller = require("./controllers/oauth2.js");
 const passport = require("passport");
+const pkce = require("oauth2orize-pkce");
 const session = require("express-session");
 
 const app = express();
@@ -56,6 +57,7 @@ passport.serializeUser(authentication.serializeUser);
 passport.deserializeUser(authentication.deserializeUser);
 
 const oauth2Server = oauth2orize.createServer();
+oauth2Server.grant(pkce.extensions());
 oauth2Server.grant(oauth2orize.grant.code(oauth2Controller.grantCode));
 oauth2Server.exchange(oauth2orize.exchange.code(oauth2Controller.exchangeCode));
 oauth2Server.serializeClient(oauth2Controller.serializeClient);

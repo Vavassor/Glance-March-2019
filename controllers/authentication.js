@@ -4,7 +4,7 @@ const models = require("../models");
 const passwordHelper = require("../helpers/password.js");
 
 module.exports = {
-  authenticateApp: (clientId, clientSecret, done) => {
+  authenticateApp: (clientId, clientSecret, codeVerifier, done) => {
     models.App
       .findOne({
         where: {
@@ -26,8 +26,10 @@ module.exports = {
               done(null, app);
             })
             .catch(error => done(error));
-        } else {
+        } else if (codeVerifier) {
           done(null, app);
+        } else {
+          return done(null, false);
         }
       })
       .catch(error => done(error));

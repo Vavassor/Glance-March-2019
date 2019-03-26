@@ -16,6 +16,13 @@ module.exports = (sequelize, DataTypes) => {
       scope: {
         type: DataTypes.STRING,
       },
+      codeChallenge: {
+        type: DataTypes.STRING,
+      },
+      codeChallengeMethod: {
+        type: DataTypes.ENUM,
+        values: ["S256"],
+      },
       expiration: {
         type: DataTypes.DATE,
         allowNull: false,
