@@ -22,9 +22,8 @@ util.inherits(AppStrategy, passport.Strategy);
 AppStrategy.prototype.authenticate = function(request) {
   const clientId = request.body["client_id"];
   const clientSecret = request.body["client_secret"];
-  const codeVerifier = request.body["code_verifier"];
 
-  if (!request.body || !clientId || (!clientSecret && !codeVerifier)) {
+  if (!request.body || !clientId) {
     return this.fail();
   }
   
@@ -40,7 +39,7 @@ AppStrategy.prototype.authenticate = function(request) {
     self.success(client, info);
   }
 
-  this._verify(clientId, clientSecret, codeVerifier, verified);
+  this._verify(clientId, clientSecret, verified);
 };
 
 module.exports = AppStrategy;

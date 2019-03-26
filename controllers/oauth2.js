@@ -55,9 +55,13 @@ module.exports = {
           return done(null, false);
         }
 
-        const codeVerifier = requestBody["code_verifier"];
+        if (authorizationCode.codeChallenge
+            && authorizationCode.codeChallengeMethod) {
+          const codeVerifier = requestBody["code_verifier"];
+          if (!codeVerifier) {
+            return done(null, false);
+          }
 
-        if (codeVerifier) {
           const hash = pkceHelper.hash(codeVerifier);
           if (authorizationCode.codeChallenge !== hash) {
             return done(null, false);
