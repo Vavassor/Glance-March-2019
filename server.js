@@ -56,10 +56,10 @@ passport.serializeUser(authentication.serializeUser);
 passport.deserializeUser(authentication.deserializeUser);
 
 const oauth2Server = oauth2orize.createServer();
-oauth2Server.deserializeClient(oauth2Controller.deserializeClient);
-oauth2Server.exchange(oauth2orize.exchange.code(oauth2Controller.exchangeCode));
 oauth2Server.grant(oauth2orize.grant.code(oauth2Controller.grantCode));
+oauth2Server.exchange(oauth2orize.exchange.code(oauth2Controller.exchangeCode));
 oauth2Server.serializeClient(oauth2Controller.serializeClient);
+oauth2Server.deserializeClient(oauth2Controller.deserializeClient);
 
 require("./routes/apiRoutes")(app);
 require("./routes/oauth2Routes")(app, oauth2Server);

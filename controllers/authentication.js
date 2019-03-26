@@ -1,6 +1,7 @@
 "use strict";
 
 const models = require("../models");
+const passwordHelper = require("../helpers/password.js");
 
 module.exports = {
   authenticateApp: (clientId, clientSecret, done) => {
@@ -17,7 +18,7 @@ module.exports = {
         if (clientSecret) {
           // The secret isn't required. But, if one is provided and it's wrong:
           // it's suspicious.
-          app.secretMatches(clientSecret)
+          passwordHelper.compareHash(clientSecret, app.clientSecret)
             .then((same) => {
               if (!same) {
                 return done(null, false);
@@ -71,7 +72,7 @@ module.exports = {
         if (!account) {
           return done(null, false);
         }
-        account.passwordMatches(password)
+        passwordHelper.compareHash(password, account.password)
           .then((same) => {
             if (!same) {
               return done(null, false);

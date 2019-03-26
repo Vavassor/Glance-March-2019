@@ -3,6 +3,7 @@
 const models = require("../models");
 const nanoid = require("nanoid");
 const passport = require("passport");
+const passwordHelper = require("../helpers/password.js");
 const uuidv5 = require("uuid/v5");
 
 module.exports = (app) => {
@@ -26,18 +27,22 @@ module.exports = (app) => {
     const clientId = uuidv5(name, uuidv5.URL);
     const clientSecret = nanoid();
 
-    models.App
-      .findOrCreate({
-        defaults: {
-          clientId: clientId,
-          clientSecret: clientSecret,
-          name: name,
-          redirectUri: redirectUri,
-          website: website,
-        },
-        where: {
-          clientId: clientId,
-        },
+    passwordHelper
+      .hash(clientSecret)
+      .then((clientSecretHash) => {
+        return models.App
+          .findOrCreate({
+            defaults: {
+              clientId: clientId,
+              clientSecret: clientSecretHash,
+              name: name,
+              redirectUri: redirectUri,
+              website: website,
+            },
+            where: {
+              clientId: clientId,
+            },
+          });
       })
       .then(([app, created]) => {
         let statusCode = 200;

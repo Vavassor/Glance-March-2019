@@ -42,20 +42,6 @@ module.exports = (sequelize, DataTypes) => {
       },
     });
 
-  App.prototype.secretMatches = function(secret) {
-    return new Promise(
-      (resolve, reject) => {
-        bcrypt.compare(secret, this.secret, (error, result) => {
-          if (error) {
-            reject(error);
-          } else {
-            resolve(result);
-          }
-        });
-      }
-    );
-  };
-
   App.associate = (models) => {
     models.App.hasMany(
       models.AuthorizationCode,

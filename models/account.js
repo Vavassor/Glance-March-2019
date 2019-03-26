@@ -26,26 +26,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       underscored: true,
-      hooks: {
-        beforeCreate: (account, options) => {
-          account.password = bcrypt.hashSync(account.password, bcrypt.genSaltSync(10));
-        },
-      },
     });
-
-  Account.prototype.passwordMatches = function(password) {
-    return new Promise(
-      (resolve, reject) => {
-        bcrypt.compare(password, this.password, (error, result) => {
-          if (error) {
-            reject(error);
-          } else {
-            resolve(result);
-          }
-        });
-      }
-    );
-  };
 
   Account.associate = (models) => {
     models.Account.hasMany(
