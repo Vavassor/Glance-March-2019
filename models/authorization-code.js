@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       codeChallengeMethod: {
         type: DataTypes.ENUM,
-        values: ["S256"],
+        values: ["plain", "S256"],
       },
       expiration: {
         type: DataTypes.DATE,

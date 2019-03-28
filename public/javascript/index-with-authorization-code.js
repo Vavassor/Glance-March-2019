@@ -98,6 +98,7 @@ function loadSomething() {
       "code": code,
       "redirect_uri": "/",
       "client_id": "c7d9e3d7-53fc-5daf-acdf-5bc8334378a7",
+      "code_verifier": sessionStorage.getItem("code_verifier"),
     },
   })
   .then((responseJson) => {

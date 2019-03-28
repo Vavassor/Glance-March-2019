@@ -82,13 +82,19 @@ module.exports = {
   },
 
   grantCode: (client, redirectUri, user, ares, request, done) => {
+    const codeChallenge = request.codeChallenge;
+    const codeChallengeMethod = request.codeChallengeMethod;
+    if (codeChallenge && !codeChallengeMethod) {
+      codeChallengeMethod = "plain";
+    }
+
     models.AuthorizationCode
       .create({
         value: nanoid(),
         redirectUri: redirectUri,
         scope: ares.scope,
-        codeChallenge: request.codeChallenge,
-        codeChallengeMethod: request.codeChallengeMethod,
+        codeChallenge: codeChallenge,
+        codeChallengeMethod: codeChallengeMethod,
         clientId: client.clientId,
         accountId: user.id,
         expiration: moment()
